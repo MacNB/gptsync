@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		92F49FF11AF8410900646138 /* showpart.c in Sources */ = {isa = PBXBuildFile; fileRef = 92F49FF01AF8410900646138 /* showpart.c */; };
 		A386EB4A1021E770004D1C07 /* lib.c in Sources */ = {isa = PBXBuildFile; fileRef = A386EB491021E770004D1C07 /* lib.c */; };
 		A386EB4C1021E77B004D1C07 /* gptsync.c in Sources */ = {isa = PBXBuildFile; fileRef = A386EB4B1021E77B004D1C07 /* gptsync.c */; };
 		A386EB531021E7ED004D1C07 /* os_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = A386EB521021E7ED004D1C07 /* os_unix.c */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		8DD76FB20486AB0100D96B5E /* gptsync */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = gptsync; sourceTree = BUILT_PRODUCTS_DIR; };
+		92F49FF01AF8410900646138 /* showpart.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = showpart.c; sourceTree = "<group>"; };
 		A386EB481021E759004D1C07 /* gptsync.8 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gptsync.8; sourceTree = "<group>"; };
 		A386EB491021E770004D1C07 /* lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lib.c; sourceTree = "<group>"; };
 		A386EB4B1021E77B004D1C07 /* gptsync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gptsync.c; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				92F49FF01AF8410900646138 /* showpart.c */,
 				A386EB521021E7ED004D1C07 /* os_unix.c */,
 				A386EB491021E770004D1C07 /* lib.c */,
 				A386EB4B1021E77B004D1C07 /* gptsync.c */,
@@ -106,7 +109,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "gptsync" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -132,6 +135,7 @@
 				A386EB4A1021E770004D1C07 /* lib.c in Sources */,
 				A386EB4C1021E77B004D1C07 /* gptsync.c in Sources */,
 				A386EB531021E7ED004D1C07 /* os_unix.c in Sources */,
+				92F49FF11AF8410900646138 /* showpart.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,13 +169,12 @@
 		1DEB928A08733DD80010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-D_LARGEFILE_SOURCE",
 					"-D_FILE_OFFSET_BITS=64",
@@ -185,7 +188,6 @@
 		1DEB928B08733DD80010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

@@ -59,6 +59,7 @@ static INTN FindMem(VOID *Buffer, UINTN BufferLength, VOID *SearchString, UINTN 
 // detect boot code
 //
 
+
 static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
 {
     UINTN   status;
@@ -77,8 +78,7 @@ static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
     *bootcodename = NULL;
     
     // detect specific boot codes
-    if (CompareMem(sector + 2, "LILO", 4) == 0 ||
-        CompareMem(sector + 6, "LILO", 4) == 0) {
+    if (CompareMem(sector + 2, "LILO", 4) == 0 || CompareMem(sector + 6, "LILO", 4) == 0) {
         *bootcodename = STR("LILO");
         
     } else if (CompareMem(sector + 3, "SYSLINUX", 8) == 0) {
@@ -87,7 +87,7 @@ static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
     } else if (FindMem(sector, 512, "ISOLINUX", 8) >= 0) {
         *bootcodename = STR("ISOLINUX");
         
-    } else if (FindMem(sector, 512, "Geom\0Hard Disk\0Read\0 Error\0", 27) >= 0) {
+    } else if (FindMem(sector, 512, "Geom\0Hard Disk\0Read\0 Error", 26) >= 0) { // MacNB removed \n\0 from string to search
         *bootcodename = STR("GRUB");
         
     } else if ((*((UINT32 *)(sector + 502)) == 0 &&
@@ -96,8 +96,7 @@ static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
                FindMem(sector, 512, "Starting the BTX loader", 23) >= 0) {
         *bootcodename = STR("FreeBSD");
         
-    } else if (FindMem(sector, 512, "!Loading", 8) >= 0 ||
-               FindMem(sector, 512, "/cdboot\0/CDBOOT\0", 16) >= 0) {
+    } else if (FindMem(sector, 512, "!Loading", 8) >= 0 || FindMem(sector, 512, "/cdboot\0/CDBOOT\0", 16) >= 0) {
         *bootcodename = STR("OpenBSD");
         
     } else if (FindMem(sector, 512, "Not a bootxx image", 18) >= 0) {
@@ -109,12 +108,10 @@ static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
     } else if (FindMem(sector, 512, "BOOTMGR", 7) >= 0) {
         *bootcodename = STR("Windows BOOTMGR (Vista)");
         
-    } else if (FindMem(sector, 512, "CPUBOOT SYS", 11) >= 0 ||
-               FindMem(sector, 512, "KERNEL  SYS", 11) >= 0) {
+    } else if (FindMem(sector, 512, "CPUBOOT SYS", 11) >= 0 || FindMem(sector, 512, "KERNEL  SYS", 11) >= 0) {
         *bootcodename = STR("FreeDOS");
         
-    } else if (FindMem(sector, 512, "OS2LDR", 6) >= 0 ||
-               FindMem(sector, 512, "OS2BOOT", 7) >= 0) {
+    } else if (FindMem(sector, 512, "OS2LDR", 6) >= 0 || FindMem(sector, 512, "OS2BOOT", 7) >= 0) {
         *bootcodename = STR("eComStation");
         
     } else if (FindMem(sector, 512, "Be Boot Loader", 14) >= 0) {
@@ -125,6 +122,21 @@ static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
         
     } else if (FindMem(sector, 512, "\x04" "beos\x06" "system\x05" "zbeos", 18) >= 0) {
         *bootcodename = STR("Haiku");
+        
+    } else if (FindMem(sector, 512,"error\0\0" "\x0A\x0D" "boot0af", 16) >=0) { // Added by MacNB -- need to be verified
+        *bootcodename = STR("Clover boot0af");
+        
+    } else if (FindMem(sector, 512,"error\0\0\0\0" "\x0A\x0D" "boot0ss", 18) >=0) {  // Added by MacNB -- need to be verified
+        *bootcodename = STR("Clover boot0ss");
+        
+    } else if (FindMem(sector, 512,"BOOT       ", 11) >=0) { // Added by MacNB -- need to be verified
+        *bootcodename = STR("Clover boot1f32alt");
+        
+    } else if (FindMem(sector, 512,"\0b\0o\0o\0t\0", 11) >=0) { // Added by MacNB -- need to be verified
+        *bootcodename = STR("Clover boot1hx");
+        
+    } else if (FindMem(sector, 512,"DellUtilityFAT16", 16) >=0) { // Added by MacNB -- need to be verified
+        *bootcodename = STR("Dell Utility Boot");
         
     }
     
@@ -253,8 +265,8 @@ UINTN showpart(VOID)
     
     // analyze all partitions
     status = analyze_parts();
-    if (status != 0)
-        return status;
+    // if (status != 0) // superfluos check removed
+    //    return status;
     
     return status;
 }

@@ -210,7 +210,7 @@ void list_types(void) {
 // display version string
 //
 void print_version(void) {
-    Print (L"%s 0.3\n", progname);
+    Print (L"%s 0.4 by MacNB\n", progname);
 }
 
 //
@@ -236,6 +236,7 @@ Valid options:\n\
   -e, --empty             create an MBR containing only the EFI Protective partition\n\
   -n, --nofill            don't try to protect unused partition\n\
   -t, --types             list the MBR recognized type codes\n\
+  -s, --showpart          Show Disk partition information\n\
   -h, --help              display this message and exit\n\
   -V, --version           print version information and exit\n\
 \n\
@@ -250,11 +251,12 @@ example: sudo ./%s /dev/disk1 1 2+af\n",
 // Options
 static struct option options[] =
 {
-{"nofill",  no_argument, 0, 'n'},
-{"empty",   no_argument, 0, 'e'},
-{"types",   no_argument, 0, 't'},
-{"help",    no_argument, 0, 'h'},
-{"version", no_argument, 0, 'V'},
+{"nofill",      no_argument, 0, 'n'},
+{"empty",       no_argument, 0, 'e'},
+{"types",       no_argument, 0, 't'},
+{"showpart",    no_argument, 0, 's'}, // Added by MacNB
+{"help",        no_argument, 0, 'h'},
+{"version",     no_argument, 0, 'V'},
 {0, 0, 0, 0}
 };
 
@@ -270,6 +272,7 @@ int main(int argc, char *argv[])
     UINT64 filesize;
     char   *reason;
     int    status;
+    int    opt_showpart = FALSE;
     
     progname         = PROGNAME_S;
 	fill_mbr         = TRUE;
@@ -277,7 +280,7 @@ int main(int argc, char *argv[])
 
 	/* Check for options.  */
 	while (1) {
-		int c = getopt_long (argc, argv, "nethV", options, 0);
+		int c = getopt_long (argc, argv, "netshV", options, 0); // Added -s option to Show Partition Info by MacNB
 		if (c == -1)
 			break;
 		else
@@ -292,7 +295,12 @@ int main(int argc, char *argv[])
 					
 				case 't':
 					list_types();
-					return 0;
+                    return 0;
+                    
+                case 's':
+                    printf ("Showing Disk Partition Information.....\n"); // Added by MacNB
+                    opt_showpart = TRUE;
+                    break;
 
 				case 'h':
 					usage (0);
@@ -310,12 +318,12 @@ int main(int argc, char *argv[])
 	
 	/* 1 parameters minimum needed.  */
 	if (optind >= argc) {
-		fprintf (stderr, "No enough parameters.\n");
+		fprintf (stderr, "Not enough parameters.\n");
 		usage (1);
     }
 
 	if (argc - optind > 4) {
-		error("only 3 partitions can be in hybrid MBR.");
+		error("Only 3 partitions can be in hybrid MBR.");
 		return 1;
 	}
 		
@@ -378,10 +386,15 @@ int main(int argc, char *argv[])
         }
     }
     
-    // run sync algorithm
-    status = PROGNAME(optind+1, argc, argv);
-    printf("\n");
-    
+    if (opt_showpart) { // Added by MacNB to show partition info
+        status = showpart();
+    }
+    else {
+        
+        // run sync algorithm
+        status = PROGNAME(optind+1, argc, argv);
+        printf("\n");
+    }
     // close file
     if (close(fd) != 0) {
         errore("Error while closing %.300s", filename);
