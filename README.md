@@ -10,3 +10,8 @@ MacNB modifications:
 - Added -s option to show partition info (instead of a separate utility)
 - Added code to check for Clover boot sectors
 - Added GUID table entry for Linux File System (to fix "GPT partition of type 'Unknown' found, will not touch this disk”. This is also a bug in the Linux version of gptsync
+
+Download OS X binary here:
+
+https://bitbucket.org/macnb/gptsync/downloads
+
