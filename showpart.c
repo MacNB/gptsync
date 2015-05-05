@@ -123,21 +123,27 @@ static UINTN detect_bootcode(UINT64 partlba, CHARN **bootcodename)
     } else if (FindMem(sector, 512, "\x04" "beos\x06" "system\x05" "zbeos", 18) >= 0) {
         *bootcodename = STR("Haiku");
         
-    } else if (FindMem(sector, 512,"error\0\0" "\x0A\x0D" "boot0af", 16) >=0) { // Added by MacNB -- need to be verified
+    } else if (FindMem(sector, 512,"\x0A\x0D" "boot0af", 9) >=0) {
         *bootcodename = STR("Clover boot0af");
         
-    } else if (FindMem(sector, 512,"error\0\0\0\0" "\x0A\x0D" "boot0ss", 18) >=0) {  // Added by MacNB -- need to be verified
+    } else if (FindMem(sector, 512,"\x0A\x0D" "boot0ss", 9) >=0) {
         *bootcodename = STR("Clover boot0ss");
         
+    } else if (FindMem(sector, 512, "\x0A\x0D" "boot0: ", 9) >= 0) { // Added by MacNB -- need to be verified
+        *bootcodename = STR ("MBR boot0");
+    
     } else if (FindMem(sector, 512,"BOOT       ", 11) >=0) { // Added by MacNB -- need to be verified
         *bootcodename = STR("Clover boot1f32alt");
         
     } else if (FindMem(sector, 512,"\0b\0o\0o\0t\0", 11) >=0) { // Added by MacNB -- need to be verified
         *bootcodename = STR("Clover boot1hx");
-        
-    } else if (FindMem(sector, 512,"DellUtilityFAT16", 16) >=0) { // Added by MacNB -- need to be verified
+
+    } else if (FindMem(sector, 512,"DellUtilityFAT16", 16) >=0) {
         *bootcodename = STR("Dell Utility Boot");
-        
+
+    }else if (FindMem(sector, 512,"Missing operating system", 24) >=0) { // Added by MacNB -- need to be verified
+        *bootcodename = STR("MSFT MBR Boot");
+
     }
     
     if (FindMem(sector, 512, "Non-system disk", 15) >= 0)   // dummy FAT boot sector
